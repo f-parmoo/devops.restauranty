@@ -10,3 +10,7 @@ resources:
   - configmap.yaml
   - ingress.yaml
   - cluster-issuer.yaml
+  - monitoring/auth-servicemonitor.yaml
+  - monitoring/items-servicemonitor.yaml
+  - monitoring/discounts-servicemonitor.yaml
+  - monitoring/mongodb-alert-rule.yaml
