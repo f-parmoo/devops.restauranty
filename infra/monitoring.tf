@@ -12,3 +12,31 @@ resource "helm_release" "kube_prometheus_stack" {
     file("${path.module}/values/node-exporter-values.yaml")
   ]
 }
+
+resource "helm_release" "loki" {
+  name             = "loki"
+  repository       = "https://grafana.github.io/helm-charts"
+  chart            = "loki"
+  namespace        = "monitoring"
+  create_namespace = true
+
+  values = [
+    file("${path.module}/values/loki-values.yaml")
+  ]
+}
+
+resource "helm_release" "alloy" {
+  depends_on = [
+    helm_release.loki
+  ]
+
+  name             = "alloy"
+  repository       = "https://grafana.github.io/helm-charts"
+  chart            = "alloy"
+  namespace        = "monitoring"
+  create_namespace = true
+
+  values = [
+    file("${path.module}/values/alloy-values.yaml")
+  ]
+}
