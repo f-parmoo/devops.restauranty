@@ -29,12 +29,10 @@ router.post("/signup", (req, res, next) => {
     address === "" ||
     phoneNumber === ""
   ) {
-    res
-      .status(400)
-      .json({
-        message:
-          "Provide email, password, name, surname, address and phone number.",
-      });
+    res.status(400).json({
+      message:
+        "Provide email, password, name, surname, address and phone number.",
+    });
     return;
   }
 

@@ -48,10 +48,15 @@ jobs:
               - 'deploy.sh'
               - '.github/workflows/**'
 
+  #############################################
+  # AUTH CI
+  #############################################
+
   auth-ci:
     name: Auth CI
     runs-on: ubuntu-latest
     needs: detect-changes
+
     if: needs.detect-changes.outputs.auth == 'true'
 
     defaults:
@@ -59,21 +64,35 @@ jobs:
         working-directory: backend/auth
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - run: npm ci
-      - run: npm run format
-      - run: npm run lint
-      - run: docker build -t auth-ci .
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Verify docker build
+        run: docker build -t auth-ci .
+
+  #############################################
+  # ITEMS CI
+  #############################################
 
   items-ci:
     name: Items CI
     runs-on: ubuntu-latest
     needs: detect-changes
+
     if: needs.detect-changes.outputs.items == 'true'
 
     defaults:
@@ -81,21 +100,35 @@ jobs:
         working-directory: backend/items
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - run: npm ci
-      - run: npm run format
-      - run: npm run lint
-      - run: docker build -t items-ci .
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Verify docker build
+        run: docker build -t items-ci .
+
+  #############################################
+  # DISCOUNTS CI
+  #############################################
 
   discounts-ci:
     name: Discounts CI
     runs-on: ubuntu-latest
     needs: detect-changes
+
     if: needs.detect-changes.outputs.discounts == 'true'
 
     defaults:
@@ -103,21 +136,35 @@ jobs:
         working-directory: backend/discounts
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - run: npm ci
-      - run: npm run format
-      - run: npm run lint
-      - run: docker build -t discounts-ci .
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Verify docker build
+        run: docker build -t discounts-ci .
+
+  #############################################
+  # CLIENT CI
+  #############################################
 
   client-ci:
     name: Client CI
     runs-on: ubuntu-latest
     needs: detect-changes
+
     if: needs.detect-changes.outputs.client == 'true'
 
     defaults:
@@ -125,44 +172,69 @@ jobs:
         working-directory: client
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - run: npm ci
-      - run: npm run format
-      - run: npm run lint
-      - run: docker build -t client-ci .
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Verify docker build
+        run: docker build -t client-ci .
+
+  #############################################
+  # VALIDATE K8S
+  #############################################
 
   validate-k8s:
     name: Validate Kubernetes Manifests
     runs-on: ubuntu-latest
     needs: detect-changes
+
     if: needs.detect-changes.outputs.k8s == 'true'
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: azure/setup-kubectl@v4
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
 
-      - run: kubectl kustomize k8s/overlays/staging
-      - run: kubectl kustomize k8s/overlays/production
+      - name: Validate staging overlay
+        run: kubectl kustomize k8s/overlays/staging
+
+      - name: Validate production overlay
+        run: kubectl kustomize k8s/overlays/production
+
+  #############################################
+  # FINAL STATUS
+  #############################################
 
   ci-passed:
     name: CI Passed
     runs-on: ubuntu-latest
+
     needs:
       - auth-ci
       - items-ci
       - discounts-ci
       - client-ci
       - validate-k8s
+
     if: always()
 
     steps:
-      - name: Check CI result
+      - name: Verify CI jobs
         run: |
           if [[ "${{ needs.auth-ci.result }}" == "failure" || \
                 "${{ needs.items-ci.result }}" == "failure" || \
@@ -173,4 +245,4 @@ jobs:
             exit 1
           fi
 
-          echo "CI passed"
+          echo "CI passed successfully"

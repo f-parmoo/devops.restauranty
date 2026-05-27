@@ -28,7 +28,8 @@ jobs:
       k8s: ${{ steps.filter.outputs.k8s }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Detect changed files
         uses: dorny/paths-filter@v3
@@ -65,11 +66,13 @@ jobs:
       ENVIRONMENT: ${{ github.event.inputs.environment || 'staging' }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Generate short SHA
         id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -77,57 +80,87 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      #############################################
+      # BUILD & PUSH AUTH
+      #############################################
+
       - name: Build and push auth image
         if: needs.detect-changes.outputs.auth == 'true' || needs.detect-changes.outputs.k8s == 'true' || github.event_name == 'workflow_dispatch'
-        run: |
-          docker buildx build \
-            --platform linux/amd64 \
-            -t fatemehparmoo/restauranty-auth:${{ steps.vars.outputs.sha_short }} \
-            -f backend/auth/Dockerfile \
-            ./backend/auth \
-            --push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend/auth
+          file: ./backend/auth/Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: |
+            fatemehparmoo/restauranty-auth:${{ steps.vars.outputs.sha_short }}
+
+      #############################################
+      # BUILD & PUSH ITEMS
+      #############################################
 
       - name: Build and push items image
         if: needs.detect-changes.outputs.items == 'true' || needs.detect-changes.outputs.k8s == 'true' || github.event_name == 'workflow_dispatch'
-        run: |
-          docker buildx build \
-            --platform linux/amd64 \
-            -t fatemehparmoo/restauranty-items:${{ steps.vars.outputs.sha_short }} \
-            -f backend/items/Dockerfile \
-            ./backend/items \
-            --push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend/items
+          file: ./backend/items/Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: |
+            fatemehparmoo/restauranty-items:${{ steps.vars.outputs.sha_short }}
+
+      #############################################
+      # BUILD & PUSH DISCOUNTS
+      #############################################
 
       - name: Build and push discounts image
         if: needs.detect-changes.outputs.discounts == 'true' || needs.detect-changes.outputs.k8s == 'true' || github.event_name == 'workflow_dispatch'
-        run: |
-          docker buildx build \
-            --platform linux/amd64 \
-            -t fatemehparmoo/restauranty-discounts:${{ steps.vars.outputs.sha_short }} \
-            -f backend/discounts/Dockerfile \
-            ./backend/discounts \
-            --push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend/discounts
+          file: ./backend/discounts/Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: |
+            fatemehparmoo/restauranty-discounts:${{ steps.vars.outputs.sha_short }}
+
+      #############################################
+      # BUILD & PUSH CLIENT
+      #############################################
 
       - name: Build and push client staging image
         if: env.ENVIRONMENT == 'staging' && (needs.detect-changes.outputs.client == 'true' || needs.detect-changes.outputs.k8s == 'true')
-        run: |
-          docker buildx build \
-            --platform linux/amd64 \
-            --build-arg REACT_APP_SERVER_URL=https://staging.restauranty.codewithfatemeh.online \
-            -t fatemehparmoo/restauranty-client:staging-${{ steps.vars.outputs.sha_short }} \
-            -f client/Dockerfile \
-            ./client \
-            --push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./client
+          file: ./client/Dockerfile
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            REACT_APP_SERVER_URL=https://staging.restauranty.codewithfatemeh.online
+          tags: |
+            fatemehparmoo/restauranty-client:staging-${{ steps.vars.outputs.sha_short }}
 
       - name: Build and push client production image
         if: env.ENVIRONMENT == 'production' && (needs.detect-changes.outputs.client == 'true' || needs.detect-changes.outputs.k8s == 'true' || github.event_name == 'workflow_dispatch')
-        run: |
-          docker buildx build \
-            --platform linux/amd64 \
-            --build-arg REACT_APP_SERVER_URL=https://restauranty.codewithfatemeh.online \
-            -t fatemehparmoo/restauranty-client:prod-${{ steps.vars.outputs.sha_short }} \
-            -f client/Dockerfile \
-            ./client \
-            --push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./client
+          file: ./client/Dockerfile
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            REACT_APP_SERVER_URL=https://restauranty.codewithfatemeh.online
+          tags: |
+            fatemehparmoo/restauranty-client:prod-${{ steps.vars.outputs.sha_short }}
+
+      #############################################
+      # AZURE LOGIN
+      #############################################
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -143,6 +176,33 @@ jobs:
 
       - name: Verify cluster access
         run: kubectl get nodes
+
+      #############################################
+      # CREATE NAMESPACE
+      #############################################
+
+      - name: Create namespace
+        run: |
+          kubectl create namespace restauranty-$ENVIRONMENT \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      #############################################
+      # CREATE KUBERNETES SECRET
+      #############################################
+
+      - name: Create Kubernetes secret
+        run: |
+          kubectl create secret generic restauranty-secret \
+            --from-literal=SECRET="${{ secrets.SECRET }}" \
+            --from-literal=CLOUD_NAME="${{ secrets.CLOUD_NAME }}" \
+            --from-literal=CLOUD_API_KEY="${{ secrets.CLOUD_API_KEY }}" \
+            --from-literal=CLOUD_API_SECRET="${{ secrets.CLOUD_API_SECRET }}" \
+            -n restauranty-$ENVIRONMENT \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      #############################################
+      # UPDATE IMAGE TAGS
+      #############################################
 
       - name: Update image tags in Kustomize overlay
         run: |
@@ -161,15 +221,26 @@ jobs:
           fi
 
           if [[ "${{ needs.detect-changes.outputs.client }}" == "true" || "${{ needs.detect-changes.outputs.k8s }}" == "true" || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+
             if [[ "$ENVIRONMENT" == "production" ]]; then
               kustomize edit set image fatemehparmoo/restauranty-client=fatemehparmoo/restauranty-client:prod-${{ steps.vars.outputs.sha_short }}
             else
               kustomize edit set image fatemehparmoo/restauranty-client=fatemehparmoo/restauranty-client:staging-${{ steps.vars.outputs.sha_short }}
             fi
+
           fi
 
+      #############################################
+      # DEPLOY
+      #############################################
+
       - name: Deploy overlay
-        run: kubectl apply -k k8s/overlays/$ENVIRONMENT
+        run: |
+          kubectl apply -k k8s/overlays/$ENVIRONMENT
+
+      #############################################
+      # VERIFY ROLLOUT
+      #############################################
 
       - name: Verify rollout
         run: |

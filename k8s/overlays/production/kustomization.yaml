@@ -6,7 +6,6 @@ namespace: restauranty-production
 resources:
 - ../../base
 - namespace.yaml
-- secret.yaml
 - auth-hpa.yaml
 - discounts-hpa.yaml
 - items-hpa.yaml
