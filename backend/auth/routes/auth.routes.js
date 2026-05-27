@@ -21,8 +21,20 @@ router.post("/signup", (req, res, next) => {
   const { name, surname, email, password, address, phoneNumber } = req.body;
 
   // Check if email or password or name are provided as empty strings
-  if (email === "" || password === "" || name === "" || surname === "" || address === "" || phoneNumber === "") {
-    res.status(400).json({ message: "Provide email, password, name, surname, address and phone number." });
+  if (
+    email === "" ||
+    password === "" ||
+    name === "" ||
+    surname === "" ||
+    address === "" ||
+    phoneNumber === ""
+  ) {
+    res
+      .status(400)
+      .json({
+        message:
+          "Provide email, password, name, surname, address and phone number.",
+      });
     return;
   }
 
@@ -65,7 +77,14 @@ router.post("/signup", (req, res, next) => {
 
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
-      return User.create({ email, password: hashedPassword, name, surname, address, phoneNumber });
+      return User.create({
+        email,
+        password: hashedPassword,
+        name,
+        surname,
+        address,
+        phoneNumber,
+      });
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
@@ -105,10 +124,19 @@ router.post("/login", (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, name, surname, address, phoneNumber, role } = foundUser;
+        const { _id, email, name, surname, address, phoneNumber, role } =
+          foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { _id, email, name, surname, address, phoneNumber, role };
+        const payload = {
+          _id,
+          email,
+          name,
+          surname,
+          address,
+          phoneNumber,
+          role,
+        };
 
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.SECRET, {
@@ -133,7 +161,6 @@ router.get("/verify", isAuthenticated, (req, res, next) => {
 
   // Send back the token payload object containing the user data
   res.status(200).json(req.payload);
-
 });
 
 module.exports = router;

@@ -25,7 +25,7 @@ module.exports = (app) => {
   app.use(
     cors({
       origin: ["*"],
-    })
+    }),
   );
 
   // In development environment the app logs

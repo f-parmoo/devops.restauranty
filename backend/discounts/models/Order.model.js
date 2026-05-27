@@ -1,32 +1,34 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-  itemId: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Item'
-  }],
+  itemId: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Item",
+    },
+  ],
   orderValue: {
     type: Number,
-    required: true
+    required: true,
   },
   timestamp: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   addressOrTableId: {
-    type: String
+    type: String,
   },
   status: {
     type: String,
-    enum: ['pending', 'in progress', 'completed'],
-    default: 'pending'
+    enum: ["pending", "in progress", "completed"],
+    default: "pending",
   },
   discountOrPromoCode: {
-    type: String
+    type: String,
   },
   // QR Code Placeholder, contents might depend on the libraries or services we use to generate the QR codes.
   qrCode: {
-    type: String
+    type: String,
   },
   userId: String,
   placedOn: Date,
@@ -36,9 +38,9 @@ const orderSchema = new mongoose.Schema({
   address: String,
   totalProducts: Number,
   totalPrice: Number,
-  method: String
+  method: String,
 });
 
-const Order = mongoose.model('Order', orderSchema);
+const Order = mongoose.model("Order", orderSchema);
 
 module.exports = Order;

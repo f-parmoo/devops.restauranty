@@ -12,6 +12,8 @@ mobile/.expo
 k8s/overlays/**/secret.yaml
 
 # Terraform
+infra/.terraform.lock.hcl
+infra/terraform.tfvars
 **/.terraform/*
 *.tfstate
 *.tfstate.*
@@ -25,3 +27,9 @@ override.tf.json
 *_override.tf.json
 .terraformrc
 terraform.rc
+
+
+
+.DS_Store
+
+**/.DS_Store
