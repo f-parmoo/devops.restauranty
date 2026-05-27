@@ -1,0 +1,34 @@
+grafana:
+  adminUser: admin
+  adminPassword: admin123
+
+  service:
+    type: ClusterIP
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-production
+
+    hosts:
+      - grafana.restauranty.codewithfatemeh.online
+
+    path: /
+    pathType: Prefix
+
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.restauranty.codewithfatemeh.online
+
+  persistence:
+    enabled: true
+    size: 5Gi
+
+  defaultDashboardsEnabled: true
+
+  grafana.ini:
+    server:
+      root_url: https://grafana.restauranty.codewithfatemeh.online

@@ -104,12 +104,29 @@ az aks get-credentials \
 
 cd ..
 
+apply_secret() {
+  local environment=$1
+  local namespace=$2
+  local secret_file="k8s/overlays/$environment/secret.yaml"
+
+  if [ ! -f "$secret_file" ]; then
+    echo -e "${RED}❌ Missing secret file: $secret_file${NC}"
+    echo -e "${YELLOW}Create it locally before running deploy.sh${NC}"
+    exit 1
+  fi
+
+  echo -e "${YELLOW}🔐 Applying secret for $environment...${NC}"
+  kubectl apply -f "$secret_file" -n "$namespace"
+}
+
 echo -e "${YELLOW}🚢 Deploying staging environment...${NC}"
 
+apply_secret "staging" "$STAGING_NS"
 kubectl apply -k k8s/overlays/staging
 
 echo -e "${YELLOW}🚢 Deploying production environment...${NC}"
 
+apply_secret "production" "$PRODUCTION_NS"
 kubectl apply -k k8s/overlays/production
 
 wait_for_namespace() {
@@ -149,5 +166,5 @@ wait_for_namespace "$PRODUCTION_NS"
 echo -e "${GREEN}🎉 Deployment completed successfully${NC}"
 
 echo -e "${GREEN}🔗 Staging URL: https://staging.restauranty.codewithfatemeh.online${NC}"
-
 echo -e "${GREEN}🔗 Production URL: https://restauranty.codewithfatemeh.online${NC}"
+echo -e "${GREEN}📊 Grafana URL: https://grafana.codewithfatemeh.online${NC}"

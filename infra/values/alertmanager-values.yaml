@@ -1,0 +1,53 @@
+alertmanager:
+  enabled: true
+
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 2Gi
+
+  service:
+    type: ClusterIP
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-production
+    hosts:
+      - alertmanager.restauranty.codewithfatemeh.online
+    paths:
+      - /
+    pathType: Prefix
+    tls:
+      - secretName: alertmanager-tls
+        hosts:
+          - alertmanager.restauranty.codewithfatemeh.online
+
+  config:
+    global:
+      resolve_timeout: 5m
+      smtp_smarthost: "smtp.gmail.com:587"
+      smtp_from: "f.parmoo@gmail.com"
+      smtp_auth_username: "f.parmoo@gmail.com"
+      smtp_auth_password: "crir ywqo sqby fpse"
+      smtp_require_tls: true
+
+    route:
+      group_by: ["alertname", "namespace"]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 1h
+      receiver: email-alert
+
+    receivers:
+      - name: "null"
+
+      - name: email-alert
+        email_configs:
+          - to: "f.parmoo@gmail.com"
+            send_resolved: true

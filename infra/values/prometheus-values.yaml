@@ -1,0 +1,22 @@
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    scrapeInterval: 15s
+    evaluationInterval: 15s
+
+  service:
+    type: ClusterIP
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-production
+    hosts:
+      - prometheus.restauranty.codewithfatemeh.online
+    paths:
+      - /
+    tls:
+      - secretName: prometheus-tls
+        hosts:
+          - prometheus.restauranty.codewithfatemeh.online

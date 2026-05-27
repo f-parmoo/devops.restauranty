@@ -14,16 +14,16 @@ resources:
 images:
 - name: fatemehparmoo/restauranty-auth
   newName: fatemehparmoo/restauranty-auth
-  newTag: 2ed3b0a
+  newTag: "6785879"
 - name: fatemehparmoo/restauranty-client
   newName: fatemehparmoo/restauranty-client
-  newTag: prod-2ed3b0a
+  newTag: prod-6785879
 - name: fatemehparmoo/restauranty-discounts
   newName: fatemehparmoo/restauranty-discounts
-  newTag: 2ed3b0a
+  newTag: "6785879"
 - name: fatemehparmoo/restauranty-items
   newName: fatemehparmoo/restauranty-items
-  newTag: 2ed3b0a
+  newTag: "6785879"
 
 patches:
 - path: patches/auth-deployment.yaml
