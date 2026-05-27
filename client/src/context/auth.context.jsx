@@ -9,7 +9,6 @@ function AuthProviderWrapper(props) {
   const [user, setUser] = useState(null);
   const [isAdmin, setisAdmin] = useState(false);
 
-
   const storeToken = (token) => {
     localStorage.setItem("authToken", token);
   };
@@ -35,9 +34,9 @@ function AuthProviderWrapper(props) {
         .then((response) => {
           // If the server verifies that JWT token is valid  ✅
           const user = response.data;
-          console.log(user.role)
-          if (user.role === 'admin') {
-            setisAdmin(true)
+          console.log(user.role);
+          if (user.role === "admin") {
+            setisAdmin(true);
           }
           // Update state variables
           setIsLoggedIn(true);

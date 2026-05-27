@@ -17,10 +17,10 @@ function ProfilePage() {
           </div>
           <div>
             <h2 className="text-xl font-semibold text-gray-800">
-              {user ? `${user.name} ${user.surname}` : 'User'}
+              {user ? `${user.name} ${user.surname}` : "User"}
             </h2>
             <span className="text-xs font-medium px-2 py-1 bg-primary-50 text-primary-700 rounded-full">
-              {user?.role || 'user'}
+              {user?.role || "user"}
             </span>
           </div>
         </div>

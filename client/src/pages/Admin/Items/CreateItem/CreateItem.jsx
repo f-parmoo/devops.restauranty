@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const url = process.env.REACT_APP_SERVER_URL || process.env.REACT_APP_SERVER_ITEMS_URL || "http://localhost:80"
+const url =
+  process.env.REACT_APP_SERVER_URL ||
+  process.env.REACT_APP_SERVER_ITEMS_URL ||
+  "http://localhost:80";
 
 function CreateItem() {
   const [name, setName] = useState("");
@@ -156,7 +159,9 @@ function CreateItem() {
               onChange={onFileChange}
             />
             <div>
-              {previewSrc ? (<img src={previewSrc} className="images" alt="Preview" />) : null}
+              {previewSrc ? (
+                <img src={previewSrc} className="images" alt="Preview" />
+              ) : null}
             </div>
             <div>
               <input
@@ -166,7 +171,9 @@ function CreateItem() {
                 value="true"
                 onChange={handleAvailability}
               />
-              <label className="m-2" htmlFor="available">Available</label>
+              <label className="m-2" htmlFor="available">
+                Available
+              </label>
               <input
                 type="radio"
                 name="availability"
@@ -174,7 +181,9 @@ function CreateItem() {
                 value="false"
                 onChange={handleAvailability}
               />
-              <label className="m-2" htmlFor="notavailable">Unavailable</label>
+              <label className="m-2" htmlFor="notavailable">
+                Unavailable
+              </label>
             </div>
             <div>
               <select
@@ -183,14 +192,20 @@ function CreateItem() {
                 value={dietaryInformation}
                 onChange={handleDietaryInfo}
               >
-                <option value="" disabled>Select a Category</option>
+                <option value="" disabled>
+                  Select a Category
+                </option>
                 {dietaryOptions.map((option) => (
                   <option key={option.id} value={option.name}>
                     {option.name} - {option.description}
                   </option>
                 ))}
               </select>
-              <button className="button w-12 m-2" type="button" onClick={handleAddDietaryInfo}>
+              <button
+                className="button w-12 m-2"
+                type="button"
+                onClick={handleAddDietaryInfo}
+              >
                 +
               </button>
               <br />
@@ -205,7 +220,9 @@ function CreateItem() {
                       handleAdditionalDietaryInfoChange(index, e.target.value)
                     }
                   >
-                    <option value="" disabled>Select a Category</option>
+                    <option value="" disabled>
+                      Select a Category
+                    </option>
                     {dietaryOptions.map((option) => (
                       <option key={option.id} value={option.name}>
                         {option.name} - {option.description}
@@ -224,12 +241,12 @@ function CreateItem() {
               ))}
             </div>
             {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <button className="button m-2" type="submit">Create Item</button>
-
-          </form >
+            <button className="button m-2" type="submit">
+              Create Item
+            </button>
+          </form>
         </div>
-
-      </div >
+      </div>
     </div>
   );
 }

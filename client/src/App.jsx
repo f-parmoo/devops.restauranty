@@ -21,8 +21,8 @@ import CouponsPageList from "./pages/Admin/Coupons/CouponsPageList/CouponsPageLi
 import EditCoupon from "./pages/Admin/Coupons/EditCoupon/EditCoupon";
 
 import CreateDietary from "./pages/Admin/Dietary/CreateDietary/CreateDietary";
-import DietaryPageList from "./pages/Admin/Dietary/DietaryPageList/DietaryPageList"
-import EditDietary from "./pages/Admin/Dietary/EditDietary/EditDietary"
+import DietaryPageList from "./pages/Admin/Dietary/DietaryPageList/DietaryPageList";
+import EditDietary from "./pages/Admin/Dietary/EditDietary/EditDietary";
 
 import CreateCampaign from "./pages/Admin/Campaigns/CreateCampaign/CreateCampaign";
 import CampaignsPageList from "./pages/Admin/Campaigns/CampaignsPageList/CampaignsPageList";
@@ -36,11 +36,14 @@ function App() {
 
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/home" element={
-            <IsPrivate>
-              <HomePage />
-            </IsPrivate>
-          } />
+          <Route
+            path="/home"
+            element={
+              <IsPrivate>
+                <HomePage />
+              </IsPrivate>
+            }
+          />
 
           <Route
             path="/profile"

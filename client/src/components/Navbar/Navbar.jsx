@@ -1,9 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
-import { BiLogOut, BiListPlus, BiListUl, BiSolidDiscount, BiSolidCategoryAlt } from 'react-icons/bi';
-import { MdCampaign } from 'react-icons/md'
-import { BsFillPersonFill } from 'react-icons/bs'
+import {
+  BiLogOut,
+  BiListPlus,
+  BiListUl,
+  BiSolidDiscount,
+  BiSolidCategoryAlt,
+} from "react-icons/bi";
+import { MdCampaign } from "react-icons/md";
+import { BsFillPersonFill } from "react-icons/bs";
 
 function Navbar() {
   const { isLoggedIn, user, logOutUser, isAdmin } = useContext(AuthContext);
@@ -12,20 +18,29 @@ function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   const menuItemClass = (path) =>
-    `button-menu ${isActive(path) ? 'bg-sidebar-light text-white pl-10' : ''}`;
+    `button-menu ${isActive(path) ? "bg-sidebar-light text-white pl-10" : ""}`;
 
   return (
     <nav className="navbar">
       <div className="px-6 mb-4">
         <Link to="/">
-          <img src={"./logo.png"} width={"180px"} className="mx-auto" alt="Restauranty" />
+          <img
+            src={"./logo.png"}
+            width={"180px"}
+            className="mx-auto"
+            alt="Restauranty"
+          />
         </Link>
       </div>
 
       {user ? (
         <div className="px-6 py-3 mx-4 mb-2 bg-sidebar-light rounded-xl">
-          <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Welcome back</p>
-          <p className="text-white font-semibold text-sm">{user.name} {user.surname}</p>
+          <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">
+            Welcome back
+          </p>
+          <p className="text-white font-semibold text-sm">
+            {user.name} {user.surname}
+          </p>
         </div>
       ) : (
         <div className="px-6 py-3 mx-4 mb-2">
@@ -38,52 +53,89 @@ function Navbar() {
           <>
             {isAdmin && (
               <div className="mb-2">
-                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest pl-8 mb-2">Menu Items</p>
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest pl-8 mb-2">
+                  Menu Items
+                </p>
                 <Link to="/items">
-                  <button className={menuItemClass('/items')}><BiListUl className="icons" />Items</button>
+                  <button className={menuItemClass("/items")}>
+                    <BiListUl className="icons" />
+                    Items
+                  </button>
                 </Link>
                 <Link to="/createitem">
-                  <button className={menuItemClass('/createitem')}><BiListPlus className="icons" />Create Item</button>
+                  <button className={menuItemClass("/createitem")}>
+                    <BiListPlus className="icons" />
+                    Create Item
+                  </button>
                 </Link>
               </div>
             )}
 
             {isAdmin && (
               <div className="mb-2">
-                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest pl-8 mb-2 mt-4">Discounts</p>
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest pl-8 mb-2 mt-4">
+                  Discounts
+                </p>
                 <Link to="/discounts/coupons">
-                  <button className={menuItemClass('/discounts/coupons')}><BiSolidDiscount className="icons" />Coupons</button>
+                  <button className={menuItemClass("/discounts/coupons")}>
+                    <BiSolidDiscount className="icons" />
+                    Coupons
+                  </button>
                 </Link>
                 <Link to="/createcoupon">
-                  <button className={menuItemClass('/createcoupon')}><BiListPlus className="icons" />Create Coupon</button>
+                  <button className={menuItemClass("/createcoupon")}>
+                    <BiListPlus className="icons" />
+                    Create Coupon
+                  </button>
                 </Link>
                 <Link to="/discounts/campaigns">
-                  <button className={menuItemClass('/discounts/campaigns')}><MdCampaign className="icons" />Campaigns</button>
+                  <button className={menuItemClass("/discounts/campaigns")}>
+                    <MdCampaign className="icons" />
+                    Campaigns
+                  </button>
                 </Link>
                 <Link to="/createcampaign">
-                  <button className={menuItemClass('/createcampaign')}><BiListPlus className="icons" />Create Campaign</button>
+                  <button className={menuItemClass("/createcampaign")}>
+                    <BiListPlus className="icons" />
+                    Create Campaign
+                  </button>
                 </Link>
               </div>
             )}
 
             {isAdmin && (
               <div className="mb-2">
-                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest pl-8 mb-2 mt-4">Categories</p>
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest pl-8 mb-2 mt-4">
+                  Categories
+                </p>
                 <Link to="/dietary">
-                  <button className={menuItemClass('/dietary')}><BiSolidCategoryAlt className="icons" />Categories</button>
+                  <button className={menuItemClass("/dietary")}>
+                    <BiSolidCategoryAlt className="icons" />
+                    Categories
+                  </button>
                 </Link>
                 <Link to="/createdietary">
-                  <button className={menuItemClass('/createdietary')}><BiListPlus className="icons" />Create Category</button>
+                  <button className={menuItemClass("/createdietary")}>
+                    <BiListPlus className="icons" />
+                    Create Category
+                  </button>
                 </Link>
               </div>
             )}
 
             <div className="mt-6 pt-4 border-t border-sidebar-light">
               <Link to="/profile">
-                <button className={menuItemClass('/profile')}><BsFillPersonFill className="icons" />Profile</button>
+                <button className={menuItemClass("/profile")}>
+                  <BsFillPersonFill className="icons" />
+                  Profile
+                </button>
               </Link>
-              <button onClick={logOutUser} className="button-menu text-red-400 hover:text-red-300 hover:bg-red-500/10">
-                <BiLogOut className="icons text-red-400" />Logout
+              <button
+                onClick={logOutUser}
+                className="button-menu text-red-400 hover:text-red-300 hover:bg-red-500/10"
+              >
+                <BiLogOut className="icons text-red-400" />
+                Logout
               </button>
             </div>
           </>
