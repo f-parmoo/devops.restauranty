@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: restauranty-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 80
+
+          - path: /api/items
+            pathType: Prefix
+            backend:
+              service:
+                name: items-service
+                port:
+                  number: 80
+
+          - path: /api/discounts
+            pathType: Prefix
+            backend:
+              service:
+                name: discounts-service
+                port:
+                  number: 80
+
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: client-service
+                port:
+                  number: 80

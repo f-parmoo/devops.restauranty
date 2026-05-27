@@ -1,0 +1,10 @@
+- op: add
+  path: /spec/rules/0/host
+  value: staging.restauranty.codewithfatemeh.online
+
+- op: add
+  path: /spec/tls
+  value:
+    - hosts:
+        - staging.restauranty.codewithfatemeh.online
+      secretName: restauranty-staging-tls

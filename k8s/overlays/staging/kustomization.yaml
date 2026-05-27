@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: restauranty-staging
+
+resources:
+- ../../base
+- namespace.yaml
+- secret.yaml
+- auth-hpa.yaml
+- discounts-hpa.yaml
+- items-hpa.yaml
+- client-hpa.yaml
+
+images:
+- name: fatemehparmoo/restauranty-auth
+  newName: fatemehparmoo/restauranty-auth
+  newTag: 2ed3b0a
+- name: fatemehparmoo/restauranty-client
+  newName: fatemehparmoo/restauranty-client
+  newTag: staging-2ed3b0a
+- name: fatemehparmoo/restauranty-discounts
+  newName: fatemehparmoo/restauranty-discounts
+  newTag: 2ed3b0a
+- name: fatemehparmoo/restauranty-items
+  newName: fatemehparmoo/restauranty-items
+  newTag: 2ed3b0a
+    
+patches:
+- path: patches/auth-deployment.yaml
+- path: patches/discounts-deployment.yaml
+- path: patches/items-deployment.yaml
+- path: patches/client-deployment.yaml
+- path: patches/ingress.yaml
+  target:
+    kind: Ingress
+    name: restauranty-ingress

@@ -1,0 +1,8 @@
+subscription_id      = "YOUR_AZURE_SUBSCRIPTION_ID"
+resource_group_name  = "rg-restauranty"
+location             = "West Europe"
+aks_name             = "aks-restauranty"
+dns_zone_name        = "codewithfatemeh.online"
+letsencrypt_email    = "your-email@example.com"
+node_count           = 2
+vm_size              = "Standard_B2s"

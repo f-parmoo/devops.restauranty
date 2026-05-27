@@ -1,0 +1,10 @@
+- op: add
+  path: /spec/rules/0/host
+  value: restauranty.codewithfatemeh.online
+
+- op: add
+  path: /spec/tls
+  value:
+    - hosts:
+        - restauranty.codewithfatemeh.online
+      secretName: restauranty-prod-tls

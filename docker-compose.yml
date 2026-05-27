@@ -1,0 +1,87 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: restauranty-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  auth:
+    build:
+      context: ./backend/auth
+    image: fatemehparmoo/restauranty-auth:v1
+    container_name: restauranty-auth
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      SECRET: ${SECRET}
+      MONGODB_URI: ${MONGODB_URI}
+    depends_on:
+      - mongo
+
+  discounts:
+    build:
+      context: ./backend/discounts
+    image: fatemehparmoo/restauranty-discounts:v1
+    container_name: restauranty-discounts
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      SECRET: ${SECRET}
+      MONGODB_URI: ${MONGODB_URI}
+    depends_on:
+      - mongo
+
+  items:
+    build:
+      context: ./backend/items
+    image: fatemehparmoo/restauranty-items:v1
+    container_name: restauranty-items
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      SECRET: ${SECRET}
+      MONGODB_URI: ${MONGODB_URI}
+      CLOUD_NAME: ${CLOUD_NAME}
+      CLOUD_API_KEY: ${CLOUD_API_KEY}
+      CLOUD_API_SECRET: ${CLOUD_API_SECRET}
+    depends_on:
+      - mongo
+
+  client:
+    build:
+      context: ./client
+    image: fatemehparmoo/restauranty-client:v1
+    container_name: restauranty-client
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth
+      - discounts
+      - items
+
+  haproxy:
+    image: haproxy:lts
+    container_name: restauranty-haproxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - client
+      - auth
+      - discounts
+      - items
+
+volumes:
+  mongo-data:
