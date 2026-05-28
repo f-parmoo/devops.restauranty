@@ -256,10 +256,9 @@ Potential future enhancements:
 # Repository Structure
 
 ```text
-terraform/      -> Azure infrastructure provisioning
+infra/          -> Azure infrastructure provisioning and Observability configuration
 k8s/            -> Kubernetes manifests & Kustomize overlays
 .github/        -> GitHub Actions workflows
-monitoring/     -> Observability configuration
 scripts/        -> Deployment automation
 ```
 
