@@ -7,7 +7,6 @@ The platform includes Infrastructure as Code with Terraform, multi-environment K
 ---
 
 # Final Architecture
-
 ![Final Architecture](./docs/final-architecture.png)
 
 The platform architecture consists of:
