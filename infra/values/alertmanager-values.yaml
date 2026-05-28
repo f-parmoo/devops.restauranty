@@ -44,6 +44,11 @@ alertmanager:
       repeat_interval: 1h
       receiver: email-alert
 
+      routes:
+        - matchers:
+            - alertname = "KubeProxyDown"
+          receiver: "null"
+
     receivers:
       - name: "null"
 
