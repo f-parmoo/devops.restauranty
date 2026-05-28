@@ -12,18 +12,18 @@ resources:
 - client-hpa.yaml
 
 images:
-- name: fatemehparmoo/restauranty-auth
-  newName: fatemehparmoo/restauranty-auth
-  newTag: ea64dde
-- name: fatemehparmoo/restauranty-client
-  newName: fatemehparmoo/restauranty-client
-  newTag: staging-ea64dde
-- name: fatemehparmoo/restauranty-discounts
-  newName: fatemehparmoo/restauranty-discounts
-  newTag: ea64dde
-- name: fatemehparmoo/restauranty-items
-  newName: fatemehparmoo/restauranty-items
-  newTag: ea64dde
+- name: restaurantyacrfatemeh.azurecr.io/restauranty-auth
+  newName: restaurantyacrfatemeh.azurecr.io/restauranty-auth
+  newTag: 5b40621
+- name: restaurantyacrfatemeh.azurecr.io/restauranty-client
+  newName: restaurantyacrfatemeh.azurecr.io/restauranty-client
+  newTag: staging-5b40621
+- name: restaurantyacrfatemeh.azurecr.io/restauranty-discounts
+  newName: restaurantyacrfatemeh.azurecr.io/restauranty-discounts
+  newTag: 5b40621
+- name: restaurantyacrfatemeh.azurecr.io/restauranty-items
+  newName: restaurantyacrfatemeh.azurecr.io/restauranty-items
+  newTag: 5b40621
     
 patches:
 - path: patches/auth-deployment.yaml
