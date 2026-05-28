@@ -21,7 +21,7 @@ spec:
       containers:
         - name: client
 
-          image: fatemehparmoo/restauranty-client
+          image: restaurantyacrfatemeh.azurecr.io/restauranty-client
 
           imagePullPolicy: Always
 

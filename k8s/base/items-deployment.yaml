@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: items
-          image: fatemehparmoo/restauranty-items:2ed3b0a
+          image: restaurantyacrfatemeh.azurecr.io/restauranty-items:2ed3b0a
           imagePullPolicy: Always
           ports:
             - containerPort: 3003

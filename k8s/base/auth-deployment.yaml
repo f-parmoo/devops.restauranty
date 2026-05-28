@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: fatemehparmoo/restauranty-auth:2ed3b0a
+          image: restaurantyacrfatemeh.azurecr.io/restauranty-auth:2ed3b0a
           imagePullPolicy: Always
           ports:
             - containerPort: 3001
