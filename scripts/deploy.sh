@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+
 BLUE='\033[1;34m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -104,13 +108,11 @@ wait_for_namespace() {
 
 print_section "☁️ Running Terraform"
 
-cd infra
+terraform -chdir=infra init -input=false
+terraform -chdir=infra apply -auto-approve -input=false
 
-terraform init
-terraform apply --auto-approve
-
-RESOURCE_GROUP=$(terraform output -raw resource_group_name)
-AKS_NAME=$(terraform output -raw aks_name)
+RESOURCE_GROUP=$(terraform -chdir=infra output -raw resource_group_name)
+AKS_NAME=$(terraform -chdir=infra output -raw aks_name)
 
 # ---------------------------------------------------------
 # ACR Login
@@ -131,7 +133,6 @@ az aks get-credentials \
   --name "$AKS_NAME" \
   --overwrite-existing
 
-cd ..
 
 # ---------------------------------------------------------
 # Build & Push Docker Images

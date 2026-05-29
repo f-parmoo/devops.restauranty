@@ -14,16 +14,16 @@ resources:
 images:
 - name: restaurantyacrfatemeh.azurecr.io/restauranty-auth
   newName: restaurantyacrfatemeh.azurecr.io/restauranty-auth
-  newTag: 5b40621
+  newTag: 79cd1cb
 - name: restaurantyacrfatemeh.azurecr.io/restauranty-client
   newName: restaurantyacrfatemeh.azurecr.io/restauranty-client
-  newTag: staging-5b40621
+  newTag: staging-79cd1cb
 - name: restaurantyacrfatemeh.azurecr.io/restauranty-discounts
   newName: restaurantyacrfatemeh.azurecr.io/restauranty-discounts
-  newTag: 5b40621
+  newTag: 79cd1cb
 - name: restaurantyacrfatemeh.azurecr.io/restauranty-items
   newName: restaurantyacrfatemeh.azurecr.io/restauranty-items
-  newTag: 5b40621
+  newTag: 79cd1cb
     
 patches:
 - path: patches/auth-deployment.yaml
