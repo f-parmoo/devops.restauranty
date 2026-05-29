@@ -14,6 +14,9 @@ k8s/overlays/**/secret.yaml
 # Terraform
 infra/.terraform.lock.hcl
 infra/terraform.tfvars
+infra/bootstrap/.terraform.lock.hcl
+infra/bootstrap/terraform.tfvars
+infra/bootstrap/.terraform
 **/.terraform/*
 *.tfstate
 *.tfstate.*
