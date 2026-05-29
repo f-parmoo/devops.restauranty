@@ -49,6 +49,10 @@ alertmanager:
             - alertname = "KubeProxyDown"
           receiver: "null"
 
+        - matchers:
+            - alertname = "KubeCPUOvercommit"
+          receiver: "null"
+
     receivers:
       - name: "null"
 
